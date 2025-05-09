@@ -10,14 +10,14 @@ void call() {
     def scriptsRun = ['update-cleanup-task':'resources/updateExistinCleanUp.json']
     scriptsDelete.each { name ->
         // Delete script
-        sh "curl -u ${NEXUS_ADMIN_USERNAME}:${NEXUS_ADMIN_PASSWORD} --header 'Content-Type: application/json' -X DELETE \"${NEXUS_URL}/service/rest/v1/script/${name}\""
+        sh "set +x; curl -u ${NEXUS_ADMIN_USERNAME}:${NEXUS_ADMIN_PASSWORD} --header 'Content-Type: application/json' -X DELETE \"${NEXUS_URL}/service/rest/v1/script/${name}\""
     }
     scriptsRun.each { key, value ->
         // Put script
-        sh "curl -u ${NEXUS_ADMIN_USERNAME}:${NEXUS_ADMIN_PASSWORD} --header 'Content-Type: application/json' -X POST \"${NEXUS_URL}/service/rest/v1/script/\"" +
+        sh "set +x; curl -u ${NEXUS_ADMIN_USERNAME}:${NEXUS_ADMIN_PASSWORD} --header 'Content-Type: application/json' -X POST \"${NEXUS_URL}/service/rest/v1/script/\"" +
                 " -d @${value}"
         // Run script
-        sh "curl -u ${NEXUS_ADMIN_USERNAME}:${NEXUS_ADMIN_PASSWORD} --header 'Content-Type: application/json' -X POST \"${NEXUS_URL}/service/rest/v1/script/${key}/run\""
+        sh "set +x; curl -u ${NEXUS_ADMIN_USERNAME}:${NEXUS_ADMIN_PASSWORD} --header 'Content-Type: application/json' -X POST \"${NEXUS_URL}/service/rest/v1/script/${key}/run\""
     }
     // Boost reconciliation
     sh "oc delete pods -n ${NAMESPACE} -l mdtu-ddm.projects.epam.com/operator-name=nexus-operator"
